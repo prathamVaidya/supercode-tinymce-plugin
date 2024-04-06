@@ -1,0 +1,44 @@
+{
+  "name": "supercode-tinymce-plugin",
+  "version": "1.0.0",
+  "description": "Opensource and Powerful Source Code editor for TinyMCE. Also enables more than just HTML editing enabling Markdown Editing or any source code editing.  ",
+  "main": "index.js",
+  "scripts": {
+    "build": "cp src/* supercode/ -r && vite build",
+    "start": "rm -rf public/tinymce && cp node_modules/tinymce public -r && storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pratham Vaidya",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@chromatic-com/storybook": "^1.2.26",
+    "@storybook/addon-essentials": "^8.0.6",
+    "@storybook/addon-interactions": "^8.0.6",
+    "@storybook/addon-links": "^8.0.6",
+    "@storybook/addon-mdx-gfm": "^8.0.6",
+    "@storybook/addon-onboarding": "^8.0.6",
+    "@storybook/blocks": "^8.0.6",
+    "@storybook/react": "^8.0.6",
+    "@storybook/react-vite": "^8.0.6",
+    "@storybook/test": "^8.0.6",
+    "prop-types": "^15.8.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "storybook": "^8.0.6",
+    "vite": "^5.2.7"
+  },
+  "dependencies": {
+    "@tinymce/tinymce-react": "^5.0.0",
+    "tinymce": "^7.0.0"
+  },
+  "keywords": [
+    "opensource",
+    "tinymce",
+    "ace",
+    "plugin",
+    "source-code",
+    "code",
+    "source-code-editor"
+  ]
+}
