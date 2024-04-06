@@ -55,7 +55,7 @@
     const initDependencies = () => {
         const scripts = [
                         'https://cdnjs.cloudflare.com/ajax/libs/ace/1.9.6/ace.js', 
-                        'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js', 
+                        'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js'
                         ]
 
         if(Config.autocomplete){
@@ -158,7 +158,7 @@
             return false;
         }
 
-        let editorWidth = 0, originalHeader, isScreenSizeChanged = true;
+        let editorWidth = 0, originalHeader, isScreenSizeChanged = true, session;
 
         setConfig(editor);
         initDependencies();
@@ -196,9 +196,12 @@
                 }
 
                 let content = html_beautify(editor.getContent());
-                let session = ace.createEditSession(content, "ace/mode/html");
-                session.setUseWrapMode(Config.wrap);
-                aceEditor.setSession(session);
+                if(!session){
+                    session = ace.createEditSession(content, "ace/mode/html");
+                    session.setUseWrapMode(Config.wrap);
+                    aceEditor.setSession(session);
+                }
+                session.setValue(content);
                 aceEditor.gotoLine(Infinity);
                 aceEditor.focus();
               },
