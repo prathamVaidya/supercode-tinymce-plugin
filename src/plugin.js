@@ -80,6 +80,7 @@
         }
         aceEditor.setTheme(`ace/theme/${Config.theme}`);
         aceEditor.setFontSize(Config.fontSize);
+        aceEditor.setShowPrintMargin(false);
     }
 
     const setHeader = (view, originalHeader, onSave) => {
