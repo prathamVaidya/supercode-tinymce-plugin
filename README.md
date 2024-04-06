@@ -1,6 +1,6 @@
 # Supercode TinyMCE Plugin
 
-**SuperCode** is an enhanced source code editor plugin designed specifically for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. 
+**SuperCode** is an enhanced source code editor plugin designed specifically for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. (No ugly popup modal)
 
 ![chrome-capture-2024-4-7 (1)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/eb519154-ac86-423a-8d63-450f174c7e4b)
 
@@ -12,7 +12,7 @@ Supercode internally uses Ace Editor to provide the following features:
 - **Code Formatting:** Users can format their code effortlessly with built-in formatting options, ensuring consistency and cleanliness.
 - **Line Numbers:** SuperCode automatically adds line numbers to the code editor, aiding in navigation and reference.
 - **Customizable Themes:** Users can choose from a variety of themes to customize the appearance of the ace code editor to suit their preferences.
-- **Integration with TinyMCE:** SuperCode seamlessly integrates with TinyMCE, allowing users to insert and edit code directly within their content. The official and premium plugins open a modal box which provides a bad user experience for users who want to seamlessly use both modes.
+- **Integration with TinyMCE:** SuperCode seamlessly integrates with TinyMCE, allowing users to insert and edit code directly within their content. The official and premium code plugins utilize a modal box, which can create a disruptive user experience for individuals who aim to seamlessly switch between both modes.
 - **Markdown Editing:** SuperCode allows a parser and renderer to be passed as a configuration which can be used to convert TinyMCE into markdown editor or any editor.
 
 ## Installation
@@ -22,7 +22,8 @@ To install the SuperCode plugin, follow these steps:
 1. Download the SuperCode plugin files (Plugin files in the `supercode` directory).
 2. Upload the plugin files to your TinyMCE plugin directory.
 3. Include the SuperCode plugin in your TinyMCE configuration.
-4. Customize the plugin settings as needed.
+4. Add the supercode in the toolbar.
+5. Customize the plugin settings as needed.
 
 ## Usage
 
