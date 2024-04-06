@@ -3,7 +3,7 @@ import { resolve } from 'path'
 
 const outputDir = 'supercode';
 
-function SupercodeHotReload() {
+const SupercodeHotReload = () => {
     return {
       name: 'custom-hmr',
       enforce: 'post',
@@ -17,20 +17,20 @@ function SupercodeHotReload() {
         }
       },
     }
-}
+};
 
 export default defineConfig({
     build: {
       lib: {
         entry: resolve(__dirname, 'src/plugin.js'),
-        formats: ['cjs'],
+        formats: ['es'],
         fileName: 'plugin.min',
       },
       copyPublicDir: false,
       outDir: outputDir,
-      emptyOutDir: false
+      emptyOutDir: false,
     },
     plugins: [
         SupercodeHotReload()
       ]
-})
+});
