@@ -17,14 +17,13 @@
     "@storybook/addon-essentials": "^8.0.5",
     "@storybook/addon-interactions": "^8.0.5",
     "@storybook/addon-links": "^8.0.5",
-    "@storybook/addon-onboarding": "^8.0.5",
     "@storybook/blocks": "^8.0.5",
     "@storybook/react": "^8.0.5",
     "@storybook/react-vite": "^8.0.5",
     "@storybook/test": "^8.0.5",
     "prop-types": "^15.8.1",
-    "storybook": "^8.0.5",
     "rollup-plugin-copy": "^3.5.0",
+    "storybook": "^8.0.5",
     "vite": "^5.2.7"
   },
   "dependencies": {

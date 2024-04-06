@@ -9,7 +9,6 @@ const config = {
     to: 'tinymce/plugins/supercode'
   }],
   addons: [
-    "@storybook/addon-onboarding",
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@chromatic-com/storybook",
