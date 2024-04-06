@@ -9,7 +9,8 @@
         wrap: true,
         icon: undefined, // auto set during config
         iconName: 'sourcecode',
-        autocomplete: false
+        autocomplete: false,
+        language: 'html'
     }
 
     // Get Configurations
@@ -51,11 +52,10 @@
         }
     }
 
-
     const initDependencies = () => {
         const scripts = [
                         'https://cdnjs.cloudflare.com/ajax/libs/ace/1.9.6/ace.js', 
-                        'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js', 
+                        'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js'
                         ]
 
         if(Config.autocomplete){
@@ -71,8 +71,17 @@
     }
 
  
-    const buildAceEditor = (element) => {
-        aceEditor = ace.edit(element);
+    const buildAceEditor = (view) => {
+        // Attach Ace Editor to shadow dom to prevent tinymce css affecting it
+        view.attachShadow({mode: 'open'})
+        view.shadowRoot.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
+        const editorElement = view.shadowRoot.querySelector('.supercode-editor')
+
+        editorElement.style.width = '100%'
+        editorElement.style.height = '100%'
+        aceEditor = ace.edit(editorElement);
+        // https://github.com/josdejong/jsoneditor/issues/742#issuecomment-698449020
+        aceEditor.renderer.attachToShadowRoot();
         if(Config.autocomplete){
             aceEditor.setOptions({
                 enableLiveAutocompletion: true
@@ -80,6 +89,7 @@
         }
         aceEditor.setTheme(`ace/theme/${Config.theme}`);
         aceEditor.setFontSize(Config.fontSize);
+        aceEditor.setShowPrintMargin(false);
     }
 
     const setHeader = (view, originalHeader, onSave) => {
@@ -103,18 +113,19 @@
                     btn.removeAttribute('data-mce-name')
                     return;
             }
-                btn.classList += " tox-tbtn--disabled"
-                btn.removeAttribute('data-mce-name')
+                btn.classList.remove('tox-tbtn--enabled');
+                btn.classList.add('tox-tbtn--disabled');
+                btn.removeAttribute('data-mce-name');
             }
             else{
                 isOverflow = false;
                 btn.setAttribute('data-mce-name', 'supercode-toggle')
-                btn.style.background = '#a6ccf7'
+                btn.classList.add('tox-tbtn--enabled');
                 btn.onclick = onSave;
             }
         });
 
-        // in case of overflow button is inside a floating toolbar
+        // in case of overflow, button is inside a floating toolbar
         if(isOverflow){
             const div = document.createElement('div')
             div.classList = 'tox-toolbar__group';
@@ -122,7 +133,7 @@
             div.style.right = 0;
             div.style.height = '100%';
             const button = document.createElement('button');
-            button.classList = 'tox-tbtn';
+            button.classList = 'tox-tbtn tox-tbtn--enabled';
             button.innerHTML = `<span class="tox-icon tox-tbtn__icon-wrap">${Config.icon}</span>`;
             button.onclick = onSave;
             div.append(button);
@@ -134,12 +145,12 @@
 
     const setMainView = (view, width) => {
         // configure body of view to look similar to tinymce body, adds ace editor
+
         view.style.width = width+'px';
         view.style.height = '100%';
         view.style.position = 'relative';
-        view.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
-
-        buildAceEditor(view.querySelector('.supercode-editor'));
+        
+        buildAceEditor(view);
     }
 
     const isPluginSupported = (editor) => {
@@ -157,7 +168,7 @@
             return false;
         }
 
-        let editorWidth = 0, originalHeader;
+        let editorWidth = 0, originalHeader, isScreenSizeChanged = true, session;
 
         setConfig(editor);
         initDependencies();
@@ -183,7 +194,7 @@
                 const codeView = api.getContainer();
                 codeView.style.padding = 0;
 
-                if(codeView.childElementCount === 0){
+                if(isScreenSizeChanged || codeView.childElementCount === 0){
                     codeView.innerHTML = `<div class="supercode-header"></div><div class="supercode-body no-tox-style" id="no-tox-style"></div>`
                 
                     // Ctrl + Space Toggle Shortcut, Escape to Exit Source Code Mode
@@ -195,9 +206,12 @@
                 }
 
                 let content = html_beautify(editor.getContent());
-                let session = ace.createEditSession(content, "ace/mode/html");
-                session.setUseWrapMode(Config.wrap);
-                aceEditor.setSession(session);
+                if(!session){
+                    session = ace.createEditSession(content, `ace/mode/${Config.language}`);
+                    session.setUseWrapMode(Config.wrap);
+                    aceEditor.setSession(session);
+                }
+                session.setValue(content);
                 aceEditor.gotoLine(Infinity);
                 aceEditor.focus();
               },
@@ -208,10 +222,9 @@
 
         const startPlugin = function() {
             const container = editor.getContainer();
-            if(!editorWidth){
-                editorWidth = container.clientWidth;
-            }
-            if(!originalHeader){
+            isScreenSizeChanged = editorWidth != container.clientWidth;
+            editorWidth = container.clientWidth;
+            if(isScreenSizeChanged || !originalHeader){
                 originalHeader = container.querySelector('.tox-editor-header');
             }
             editor.execCommand('ToggleView', false, 'supercode');
