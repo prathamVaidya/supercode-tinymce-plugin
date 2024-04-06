@@ -49,10 +49,12 @@ export default function MarkdownEditor({ skin = 'oxide', initialValue}) {
           menubar: false,
           highlight_on_focus: false,
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-          supercode_renderer: renderer, // Function : Markdown => HTML 
-          supercode_parser: parser, // Function: HTML => Markdown
-          supercode_font_size: 14,
-          supercode_lang: 'markdown', // Uses 'markdown' language for code highlighting and autocomplete
+          supercode: {
+            renderer: renderer, // Function : Markdown => HTML 
+            parser: parser, // Function: HTML => Markdown
+            fontSize: 14,
+            language: 'markdown', // Uses 'markdown' language for code highlighting and autocomplete
+          },
         }}
       />
   );

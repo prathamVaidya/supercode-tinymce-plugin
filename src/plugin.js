@@ -19,80 +19,59 @@
     }
 
     // Get Configurations
-
     const setConfig = (editor) => {
-        // ace theme
-        const theme = editor.getParam('supercode_theme');
-        if (theme && typeof theme === "string") {
-            Config.theme = theme;
-        }
-
-        // font size
-        const customFontSize = editor.getParam('supercode_font_size');
-        if(typeof customFontSize === "number" && customFontSize > 0) {
-            Config.fontSize = parseInt(customFontSize);
-        }
-
-        // wrap mode
-        const wrap = editor.getParam('supercode_wrap');
-        if(typeof wrap === "boolean") {
-            Config.wrap = wrap;
-        }
-
-        // autocomplete mode
-        const autocomplete = editor.getParam('supercode_autocomplete');
-        if(typeof autocomplete === "boolean") {
-            Config.autocomplete = autocomplete;
-        }
-
-        // plugin icon name
-        const iconName = editor.getParam('supercode_icon');
-        if (iconName && typeof iconName === "string") {
-            Config.iconName = iconName;
-        }
-
-        Config.icon = editor.ui.registry.getAll().icons[Config.iconName];
-
-        if(!Config.icon){
-            throw new Error("Supercode Icon name is invalid");
-        }
-
-        // set parser (function that converts HTML back to target language)
-        const parser = editor.getParam('supercode_parser');
-        if(typeof parser === "function") {
-            Config.parser = parser;
-        }
-
-        // set renderer (function that renders source language to HTML)
-        const renderer = editor.getParam('supercode_renderer');
-        if(typeof renderer === "function") {
-            Config.renderer = renderer;
-        }
-
-        // ace language
-        const lang = editor.getParam('supercode_lang');
-        if (lang && typeof lang === "string") {
-            Config.language = lang;
-        }
-
-        // keyboard shortcut
-        const shortcut = editor.getParam('supercode_shortcut');
-        if(typeof shortcut === "boolean") {
-            Config.shortcut = shortcut;
-        }
-
-        // ace css mode (Can be used to inject CSS and fonts)
-        const css = editor.getParam('supercode_css');
-        if(typeof css === "string") {
-            Config.aceCss = css;
-        }
-
-        // ace font family
-        const fontFamily = editor.getParam('supercode_font_family');
-        if (fontFamily && typeof fontFamily === "string") {
-            Config.fontFamily = fontFamily;
+        const supercodeOptions = editor.getParam('supercode');
+    
+        if (supercodeOptions && typeof supercodeOptions === "object") {
+            for (const key in supercodeOptions) {
+                if (supercodeOptions.hasOwnProperty(key)) {
+                    const value = supercodeOptions[key];
+                    
+                    switch (key) {
+                        case 'theme':
+                        case 'icon':
+                        case 'language':
+                        case 'iconName':
+                        case 'aceCss':
+                        case 'fontFamily':
+                            if (typeof value === "string") {
+                                Config[key] = value;
+                            }
+                            break;
+                        case 'fontSize':
+                            if (typeof value === "number" && value > 0) {
+                                Config.fontSize = parseInt(value);
+                            }
+                            break;
+                        case 'wrap':
+                        case 'autocomplete':
+                        case 'shortcut':
+                            if (typeof value === "boolean") {
+                                Config[key] = value;
+                            }
+                            break;
+                        case 'parser':
+                        case 'renderer':
+                            if (typeof value === "function") {
+                                Config[key] = value;
+                            }
+                            break;
+                        default:
+                            // Ignore unrecognized options
+                            break;
+                    }
+                }
+            }
+    
+            // Set plugin icon
+            Config.icon = editor.ui.registry.getAll().icons[Config.iconName];
+            
+            if (!Config.icon) {
+                throw new Error("Supercode Icon name is invalid");
+            }
         }
     }
+    
 
     const initDependencies = () => {
         const scripts = [
