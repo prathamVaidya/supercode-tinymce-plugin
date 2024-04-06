@@ -72,6 +72,7 @@
 
  
     const buildAceEditor = (view) => {
+        // Attach Ace Editor to shadow dom to prevent tinymce css affecting it
         view.attachShadow({mode: 'open'})
         view.shadowRoot.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
         const editorElement = view.shadowRoot.querySelector('.supercode-editor')
@@ -124,7 +125,7 @@
             }
         });
 
-        // in case of overflow button is inside a floating toolbar
+        // in case of overflow, button is inside a floating toolbar
         if(isOverflow){
             const div = document.createElement('div')
             div.classList = 'tox-toolbar__group';
