@@ -79,7 +79,6 @@
                         
                         switch (key) {
                             case 'theme':
-                            case 'icon':
                             case 'language':
                             case 'iconName':
                             case 'aceCss':
