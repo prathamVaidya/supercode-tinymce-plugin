@@ -9,7 +9,8 @@
         wrap: true,
         icon: undefined, // auto set during config
         iconName: 'sourcecode',
-        autocomplete: false
+        autocomplete: false,
+        language: 'html'
     }
 
     // Get Configurations
@@ -51,7 +52,6 @@
         }
     }
 
-
     const initDependencies = () => {
         const scripts = [
                         'https://cdnjs.cloudflare.com/ajax/libs/ace/1.9.6/ace.js', 
@@ -71,8 +71,16 @@
     }
 
  
-    const buildAceEditor = (element) => {
-        aceEditor = ace.edit(element);
+    const buildAceEditor = (view) => {
+        view.attachShadow({mode: 'open'})
+        view.shadowRoot.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
+        const editorElement = view.shadowRoot.querySelector('.supercode-editor')
+
+        editorElement.style.width = '100%'
+        editorElement.style.height = '100%'
+        aceEditor = ace.edit(editorElement);
+        // https://github.com/josdejong/jsoneditor/issues/742#issuecomment-698449020
+        aceEditor.renderer.attachToShadowRoot();
         if(Config.autocomplete){
             aceEditor.setOptions({
                 enableLiveAutocompletion: true
@@ -136,12 +144,12 @@
 
     const setMainView = (view, width) => {
         // configure body of view to look similar to tinymce body, adds ace editor
+
         view.style.width = width+'px';
         view.style.height = '100%';
         view.style.position = 'relative';
-        view.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
-
-        buildAceEditor(view.querySelector('.supercode-editor'));
+        
+        buildAceEditor(view);
     }
 
     const isPluginSupported = (editor) => {
@@ -198,7 +206,7 @@
 
                 let content = html_beautify(editor.getContent());
                 if(!session){
-                    session = ace.createEditSession(content, "ace/mode/html");
+                    session = ace.createEditSession(content, `ace/mode/${Config.language}`);
                     session.setUseWrapMode(Config.wrap);
                     aceEditor.setSession(session);
                 }
