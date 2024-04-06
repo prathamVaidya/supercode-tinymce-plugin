@@ -10,7 +10,12 @@
         icon: undefined, // auto set during config
         iconName: 'sourcecode',
         autocomplete: false,
-        language: 'html'
+        language: 'html',
+        renderer: null,
+        parser: null,
+        shortcut: true,
+        aceCss: null,
+        fontFamily: null
     }
 
     // Get Configurations
@@ -40,6 +45,7 @@
             Config.autocomplete = autocomplete;
         }
 
+        // plugin icon name
         const iconName = editor.getParam('supercode_icon');
         if (iconName && typeof iconName === "string") {
             Config.iconName = iconName;
@@ -48,7 +54,43 @@
         Config.icon = editor.ui.registry.getAll().icons[Config.iconName];
 
         if(!Config.icon){
-            throw new Error("Supercode Icon name is invalid")
+            throw new Error("Supercode Icon name is invalid");
+        }
+
+        // set parser (function that converts HTML back to target language)
+        const parser = editor.getParam('supercode_parser');
+        if(typeof parser === "function") {
+            Config.parser = parser;
+        }
+
+        // set renderer (function that renders source language to HTML)
+        const renderer = editor.getParam('supercode_renderer');
+        if(typeof renderer === "function") {
+            Config.renderer = renderer;
+        }
+
+        // ace language
+        const lang = editor.getParam('supercode_lang');
+        if (lang && typeof lang === "string") {
+            Config.language = lang;
+        }
+
+        // keyboard shortcut
+        const shortcut = editor.getParam('supercode_shortcut');
+        if(typeof shortcut === "boolean") {
+            Config.shortcut = shortcut;
+        }
+
+        // ace css mode (Can be used to inject CSS and fonts)
+        const css = editor.getParam('supercode_css');
+        if(typeof css === "string") {
+            Config.aceCss = css;
+        }
+
+        // ace font family
+        const fontFamily = editor.getParam('supercode_font_family');
+        if (fontFamily && typeof fontFamily === "string") {
+            Config.fontFamily = fontFamily;
         }
     }
 
@@ -74,19 +116,34 @@
     const buildAceEditor = (view) => {
         // Attach Ace Editor to shadow dom to prevent tinymce css affecting it
         view.attachShadow({mode: 'open'})
-        view.shadowRoot.innerHTML = `<div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
-        const editorElement = view.shadowRoot.querySelector('.supercode-editor')
+        
+        if(Config.aceCss){
+            const sheet = new CSSStyleSheet()
+            sheet.replaceSync(Config.aceCss);
+            view.shadowRoot.adoptedStyleSheets.push(sheet);
+        }
 
-        editorElement.style.width = '100%'
-        editorElement.style.height = '100%'
+        view.shadowRoot.innerHTML = `
+        <div class="supercode-editor" style="width: 100%; height: 100%; position: absolute; left:0; top:0"></div>`;
+        const editorElement = view.shadowRoot.querySelector('.supercode-editor');
+
+        editorElement.style.width = '100%';
+        editorElement.style.height = '100%';
         aceEditor = ace.edit(editorElement);
         // https://github.com/josdejong/jsoneditor/issues/742#issuecomment-698449020
         aceEditor.renderer.attachToShadowRoot();
+
+        const options = {};
+
         if(Config.autocomplete){
-            aceEditor.setOptions({
-                enableLiveAutocompletion: true
-            });
+            options.enableLiveAutocompletion = true;
         }
+
+        if(Config.fontFamily){
+            options.fontFamily = Config.fontFamily;
+        }
+
+        aceEditor.setOptions(options);
         aceEditor.setTheme(`ace/theme/${Config.theme}`);
         aceEditor.setFontSize(Config.fontSize);
         aceEditor.setShowPrintMargin(false);
@@ -176,7 +233,11 @@
         const onSaveHandler = () => {
             editor.focus();
             editor.undoManager.transact(function() {
-            editor.setContent(aceEditor.getValue())
+            let value = aceEditor.getValue();
+            if(Config.renderer){
+                value = Config.renderer(value);
+            }
+            editor.setContent(value);
             });
             editor.selection.setCursorLocation();
             editor.nodeChanged();
@@ -189,23 +250,34 @@
             }
         };
 
+        const getSourceCode = (value) => {
+            if(Config.parser){
+                return Config.parser(value);
+            }
+            return html_beautify(value);
+        }
+
         const CodeView = {
               onShow: (api) => {
                 const codeView = api.getContainer();
                 codeView.style.padding = 0;
+                codeView.style.display = 'flex';
+                codeView.style.flexDirection = 'column';
 
                 if(isScreenSizeChanged || codeView.childElementCount === 0){
                     codeView.innerHTML = `<div class="supercode-header"></div><div class="supercode-body no-tox-style" id="no-tox-style"></div>`
                 
                     // Ctrl + Space Toggle Shortcut, Escape to Exit Source Code Mode
-                    codeView.addEventListener('keydown', onKeyDownHandler)
+                    if(Config.shortcut){
+                        codeView.addEventListener('keydown', onKeyDownHandler)
+                    }
                     // configure header
                     setHeader(codeView.querySelector('.supercode-header'), originalHeader, onSaveHandler);
                     // configure main code view to look same
                     setMainView(codeView.querySelector('.supercode-body '), editorWidth);
                 }
 
-                let content = html_beautify(editor.getContent());
+                let content = getSourceCode(editor.getContent());
                 if(!session){
                     session = ace.createEditSession(content, `ace/mode/${Config.language}`);
                     session.setUseWrapMode(Config.wrap);
@@ -216,7 +288,9 @@
                 aceEditor.focus();
               },
               onHide: () => {
-                removeEventListener('keydown', onKeyDownHandler)
+                if(Config.shortcut){
+                    removeEventListener('keydown', onKeyDownHandler)
+                }
               }
         };
 
@@ -239,7 +313,9 @@
         });
 
         // Ctrl + Space Toggle Shortcut
-        editor.shortcuts.add('ctrl+32', 'Toggles Source Code Editing Mode', startPlugin);
+        if(Config.shortcut){
+            editor.shortcuts.add('ctrl+32', 'Toggles Source Code Editing Mode', startPlugin);
+        }
 
         return {
             getMetadata: function () {
