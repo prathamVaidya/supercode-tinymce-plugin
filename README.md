@@ -4,6 +4,10 @@
 
 ![chrome-capture-2024-4-7 (1)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/eb519154-ac86-423a-8d63-450f174c7e4b)
 
+[![View Demo](https://img.shields.io/badge/View%20Demo-2ecc71?style=for-the-badge)](https://supercode.prathamvaidya.in/iframe.html?args=&globals=backgrounds.grid:!true&id=supercode-tinymceeditor--supercode-plugin&viewMode=story)       
+
+[![Storybook](https://img.shields.io/badge/View%20Storybook-ff4785?style=for-the-badge&logo=storybook&logoColor=fff)](https://supercode.prathamvaidya.in)
+
 ## Features
 
 Supercode internally uses Ace Editor to provide the following features:
@@ -39,6 +43,30 @@ To use the Supercode plugin in TinyMCE, simply:
 
 Supercode allows a parser method and renderer method to be passed as a configuration, this gives the ability to convert the languages when switching between visual and code mode. A good use case can be converting TinyMCE into a Markdown editor.
 
+The basic implementation will look like this :
+```jsx
+<Editor
+      value={value}
+      onEditorChange={(htmlCode) => {
+        setValue(htmlCode);
+      }}
+      init={{
+        plugins: [
+          'supercode'
+        ],
+        toolbar: 'supercode',
+        supercode: {
+          renderer: renderer, // Function : Markdown => HTML 
+          parser: parser, // Function: HTML => Markdown
+          language: 'markdown', // Uses 'markdown' language for code highlighting and autocomplete
+        },
+      }}
+      />
+
+```
+
+[![View Markdown](https://img.shields.io/badge/View%20Markdown%20Demo-2ecc71?style=for-the-badge)](https://supercode.prathamvaidya.in/?path=/story/supercode-markdowneditor--supercode-plugin&globals=backgrounds.grid:!true)       
+
 ![chrome-capture-2024-4-7 (2)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/00fb07c3-3ef9-485f-984c-5ce03b4a72e3)
 
 ## Configuration
@@ -64,7 +92,6 @@ tinymce.init({
     fontFamily: 'Monospace',
   }
 });
-
 ```
 
 Here are all the configurations
@@ -137,6 +164,16 @@ All the ace themes are supported. You can try out the themes [here](https://ace.
 ## Compatibility
 
 Supercode is compatible with the latest versions of TinyMCE and supports modern web browsers, ensuring a smooth editing experience for all users. I have only tested it on v7 till now. Create an issue if it has or has not worked for your version.
+
+## Todos
+
+- [x] Added parser and renderer
+- [] Add i18n support for localization
+- [] Allow Custom Key bindings
+- [] Preserve cursor position on mode change
+- [] Resize support for Supercode editor. (Current behavior: supercode will not resize until user goes back to TinyMCE visual mode)
+- [] Optimizations for Markdown editor
+
 
 ## Contributing
 
