@@ -24,7 +24,7 @@ jobs:
       uses: dorny/paths-filter@v3
       with:
         base: ${{ github.ref }}
-        predicate-quantifier: 'every'
+        predicate-quantifier: 'every' # ignore the linting error, the option still exists but is not listed in the workflow inputs
         filters: |
           storybook:
             - '!LICENSE'
