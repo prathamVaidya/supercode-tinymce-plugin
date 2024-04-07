@@ -18,6 +18,8 @@ jobs:
       name: github-pages
       url: ${{ steps.build-publish.outputs.page_url }}
     steps:
+    - name: checkout
+      uses: actions/checkout@v4
     - id: filter
       uses: dorny/paths-filter@v3
       with:
@@ -34,3 +36,4 @@ jobs:
         install_command: yarn install # default: npm ci
         build_command: yarn build-storybook # default: npm run build-storybook
         path: storybook-static # default: dist/storybook
+        checkout: false
