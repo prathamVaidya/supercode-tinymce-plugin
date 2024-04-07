@@ -324,8 +324,8 @@
         return {
             getMetadata: function () {
                 return {
-                    name: "Source Code Editor",
-                    url: ""
+                    name: "Supercode",
+                    url: "https://github.com/prathamVaidya/supercode-tinymce-plugin"
                 };
             }
         }
