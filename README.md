@@ -10,7 +10,7 @@
 
 ## Features
 
-Supercode internally uses Ace Editor to provide the following features:
+Supercode internally uses [Ace Editor](https://github.com/ajaxorg/ace) to provide the following features:
 
 - **Syntax Highlighting:** Supercode offers syntax highlighting for a wide range of programming languages, making code easier to read and understand.
 - **Code Formatting:** Users can format their code effortlessly with built-in formatting options, ensuring consistency and cleanliness.
@@ -98,17 +98,17 @@ Here are all the configurations
 
 | Option          | Description                                                                      | Data Type        |
 |-----------------|----------------------------------------------------------------------------------|------------------|
-| theme           | The theme to be applied to the ace code editor.                                  | String           |
-| fontSize        | The font size of the ace code editor.                                            | Number           |
-| wrap            | Determines whether code lines should wrap or not.                                 | Boolean          |
-| autocomplete    | Specifies whether autocomplete functionality is enabled.                          | Boolean          |
-| iconName        | The name of the icon used for the Supercode plugin in the toolbar.  [View Supported Icon List](https://www.tiny.cloud/docs/advanced/editor-icon-identifiers/)              | String           |
-| parser          | The method used for converting HTML content back into the target language.        | Function         |
-| renderer        | The method used for rendering the source language into HTML.                      | Function         |
-| language        | The default language for syntax highlighting. [Supported Languages](https://cloud9-sdk.readme.io/docs/language-mode)                                     | String           |
-| shortcut        | Specifies whether (Ctrl+Space) keyboard shortcuts are enabled.                                 | Boolean          |
-| aceCss          | The custom CSS or CSS fonts to customize the appearance of the code editor.            | String           |
-| fontFamily      | The font family applied to the code editor.                                       | String           |
+| `theme`           | The theme to be applied to the ace code editor.                                  | String           |
+| `fontSize`        | The font size of the ace code editor.                                            | Number           |
+| `wrap`            | Determines whether code lines should wrap or not.                                 | Boolean          |
+| `autocomplete`    | Specifies whether autocomplete functionality is enabled.                          | Boolean          |
+| `iconName`        | The name of the icon used for the Supercode plugin in the toolbar.  [View Supported Icon List](https://www.tiny.cloud/docs/advanced/editor-icon-identifiers/)              | String           |
+| `parser`          | The method used for converting HTML content back into the target language.        | Function         |
+| `renderer`        | The method used for rendering the source language into HTML.                      | Function         |
+| `language`        | The default language for syntax highlighting. [Supported Languages](https://cloud9-sdk.readme.io/docs/language-mode)                                     | String           |
+| `shortcut`        | Specifies whether (Ctrl+Space) keyboard shortcuts are enabled.                                 | Boolean          |
+| `aceCss`          | The custom CSS or CSS fonts to customize the appearance of the code editor.            | String           |
+| `fontFamily`      | The font family applied to the code editor.                                       | String           |
 
 # Editor Themes
 
@@ -163,16 +163,16 @@ All the ace themes are supported. You can try out the themes [here](https://ace.
 
 ## Compatibility
 
-Supercode is compatible with the latest versions of TinyMCE and supports modern web browsers, ensuring a smooth editing experience for all users. I have only tested it on v7 till now. Create an issue if it has or has not worked for your version.
+Supercode is compatible with the latest versions of TinyMCE and supports all the themes. I have only tested it on v7 till now. Create an issue if it has or has not worked for your tinymce version. As per my knowledge it should work with all the tinyMCE versions after v5.
 
 ## Todos
 
 - [x] Added parser and renderer
-- [] Add i18n support for localization
-- [] Allow Custom Key bindings
-- [] Preserve cursor position on mode change
-- [] Resize support for Supercode editor. (Current behavior: supercode will not resize until user goes back to TinyMCE visual mode)
-- [] Optimizations for Markdown editor
+- [ ] Add i18n support for localization
+- [ ] Allow Custom Key bindings
+- [ ] Preserve cursor position on mode change
+- [ ] Resize support for Supercode editor. (Current behavior: supercode will not resize until user goes back to TinyMCE visual mode)
+- [ ] Optimizations for Markdown editor
 
 
 ## Contributing
