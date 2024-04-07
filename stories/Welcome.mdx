@@ -1,0 +1,58 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Welcome" />
+
+<div className="sb-container">
+  <div className='sb-section-title'>
+    # Storybook for Supercode Plugin 
+
+    Supercode uses storybook for testing and development of the plugin. You can find all the stories in the left side panel.
+    
+    ## Setting up Development
+
+    To set up development for the Supercode plugin, follow these steps:
+
+    1. Clone your fork of the Supercode repository from GitHub:
+
+    ```bash
+    git clone https://github.com/prathamVaidya/supercode-tinymce-plugin.git
+    ```
+
+    2. Navigate to the project directory and install dependencies
+
+    ```bash
+    yarn
+    ```
+
+    3. Start the storybook development server:
+
+    ```bash
+    yarn start
+    ```
+
+    The main `plugin.js` file is inside `src` folder. Edit the `plugin.js` and use the storybook to test how changes are taking effect.
+
+        
+    ## Future Plans
+
+    Feel free to pick a task from below and create a PR.
+
+    - <strike>Added parser and renderer</strike>
+    - Add i18n support for localization
+    - Allow Custom Key bindings
+    - Preserve cursor position on mode change
+    - Resize support for Supercode editor. (Current behavior: supercode will not resize until user goes back to TinyMCE visual mode)
+    - Optimizations for Markdown editor
+    - Improve Ace Editor default fonts, styles.
+    - Write Unit tests and Integration Tests
+    - Testing on TinyMCE v6.
+
+    ## Contributing
+
+    If you'd like to contribute to the development of Supercode, please feel free to fork this repository and submit a pull request. We welcome any contributions or feedback to help improve the plugin.
+
+    ## Support
+
+    For any questions, issues, or support requests related to Supercode, please [contact us](mailto:hi@prathamvaidya.in). I'll be happy to help!
+  </div>
+</div>
