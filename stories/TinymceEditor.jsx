@@ -38,9 +38,8 @@ export default function TinymceEditor({ skin = 'oxide', mode, value, size = 'non
   const modes = {
     "super" : {
       plugins: [
-        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-        'insertdatetime', 'media', 'table', 'code', 'help',  'supercode'
+        'advlist', 'autolink', 'lists', 'link', 'anchor',
+        'searchreplace', 'visualblocks', 'table', 'help', 'supercode'
       ],
       toolbar: 'undo redo | blocks | ' +
         'bold italic forecolor | alignleft aligncenter ' +
@@ -49,9 +48,8 @@ export default function TinymceEditor({ skin = 'oxide', mode, value, size = 'non
     },
     "classic" : {
       plugins: [
-        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-        'insertdatetime', 'media', 'table', 'code', 'help',  'code'
+        'advlist', 'autolink', 'lists', 'link', 'anchor',
+        'searchreplace', 'visualblocks', 'table', 'help', 'code'
       ],
       toolbar: 'undo redo | blocks | ' +
         'bold italic forecolor | alignleft aligncenter ' +

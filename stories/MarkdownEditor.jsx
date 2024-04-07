@@ -17,6 +17,12 @@ const parser = (htmlCode) => {
   return HtmlToMarkdown.turndown(htmlCode);
 };
 
+/**
+ * This Markdown editor is implemented using TinyMCE and Supercode.
+ *  Using the `renderer` and `parser` methods TinyMCE can be converted
+ *  into a format Editor for any language. Also note that few tools like 
+ * indentation, text color, alignment has no effect on markdown, so its better to not add them in toolbar.
+ */
 export default function MarkdownEditor({ skin = 'oxide', initialValue}) {
   const editorRef = React.useRef(null);
   const [value, setValue] = React.useState(renderer(initialValue)); // the actual value will be HTML. Parse it when needed.
@@ -34,14 +40,13 @@ export default function MarkdownEditor({ skin = 'oxide', initialValue}) {
         }}
         init={{
           plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'code', 'help',  'supercode'
+            'autolink', 'lists', 'link', 'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+            'table', 'help', 'supercode'
           ],
           toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist | ' +
-            'codeeditor | supercode',
+            'bold italic underline' +
+            '| bullist numlist | ' +
+            'supercode',
           skin,
           base_url: '/tinymce',
           promotion: false,
