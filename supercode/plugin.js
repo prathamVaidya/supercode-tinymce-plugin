@@ -1,8 +1,6 @@
 ! function() {
     "use strict";
 
-    let aceEditor;
-
     const initDependencies = (config) => {
         const scripts = {
            "ace-default" : {
@@ -50,8 +48,7 @@
             return false;
         }
 
-        let editorWidth = 0, originalHeader, isScreenSizeChanged = false, session;
-
+        let editorWidth = 0, originalHeader, isScreenSizeChanged = false, session, aceEditor;
 
         let Config = {
             theme: 'chrome',
@@ -216,7 +213,6 @@
             
             buildAceEditor(view);
         }
-
 
         setConfig(editor);
         initDependencies(Config);
