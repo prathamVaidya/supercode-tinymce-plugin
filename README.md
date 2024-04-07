@@ -1,6 +1,6 @@
 # Supercode TinyMCE Plugin
 
-**Supercode** is an enhanced source code editor plugin designed specifically for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. (No ugly popup modal)
+**Supercode** is an enhanced source code editor plugin for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. (No ugly popup modal)
 
 ![chrome-capture-2024-4-7 (1)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/eb519154-ac86-423a-8d63-450f174c7e4b)
 
@@ -181,7 +181,11 @@ If you'd like to contribute to the development of Supercode, please feel free to
 
 ## Support
 
-For any questions, issues, or support requests related to Supercode, please [contact us](mailto:hi@prathamvaidya.in). I'll be happy to help!
+For any questions, issues, or support requests related to Supercode, please feel free to [contact me](mailto:hi@prathamvaidya.in). I'll be happy to help!
+
+## Special Thanks
+
+Took some inspiration from this [Advanced Source Code Editor plugin](https://github.com/melquibrito/source-code-editor-tinymce-plugin) made by [@melquibrito](https://github.com/melquibrito).
 
 ---
 **Supercode** - Enhanced Source Code Editor for TinyMCE
