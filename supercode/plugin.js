@@ -50,7 +50,7 @@
             return false;
         }
 
-        let editorWidth = 0, originalHeader, isScreenSizeChanged = true, session;
+        let editorWidth = 0, originalHeader, isScreenSizeChanged = false, session;
 
 
         let Config = {
@@ -119,7 +119,8 @@
                 throw new Error("Supercode Icon name is invalid");
             }
         }
-           
+        
+        // Builds ace editor only on the first run 
         const buildAceEditor = (view) => {
             // Attach Ace Editor to shadow dom to prevent tinymce css affecting it
             view.attachShadow({mode: 'open'})
@@ -160,11 +161,10 @@
             // add a copy of original header to give original header look
             const newHeader = originalHeader.cloneNode(true);
             newHeader.style.position = 'relative';
+            // If menu-bar exists utilize the space to show Title "Source Code Editor"
             const menubar = newHeader.querySelector('.tox-menubar');
             if(menubar){
-                menubar.innerHTML = `
-                    <b style='font-size: 14px; font-weight: bold; padding: 9px;'>Source Code Editor</b>
-                `
+                menubar.innerHTML = `<b style='font-size: 14px; font-weight: bold; padding: 9px;'>Source Code Editor</b>`
             }
 
             // hide all the buttons except supercode button, attach event listener
@@ -203,7 +203,7 @@
                 div.append(button);
                 newHeader.append(div);
             }
-
+            view.innerHTML = ''; // delete any existing header
             view.append(newHeader);
         }
 
@@ -251,12 +251,19 @@
         const CodeView = {
               onShow: (api) => {
                 const codeView = api.getContainer();
-                codeView.style.padding = 0;
-                codeView.style.display = 'flex';
-                codeView.style.flexDirection = 'column';
+                
+                // On tinymce size change => resize code view
+                if(isScreenSizeChanged){
+                    setHeader(codeView.querySelector('.supercode-header'), originalHeader, onSaveHandler);
+                    codeView.querySelector('.supercode-body ').style.width = editorWidth+'px';
+                }
 
-                if(isScreenSizeChanged || codeView.childElementCount === 0){
-                    codeView.innerHTML = `<div class="supercode-header"></div><div class="supercode-body no-tox-style" id="no-tox-style"></div>`
+                // Only on First time plugin opened => mount view
+                if(codeView.childElementCount === 0){
+                    codeView.style.padding = 0;
+                    codeView.style.display = 'flex';
+                    codeView.style.flexDirection = 'column';
+                    codeView.innerHTML = `<div class="supercode-header"></div><div class="supercode-body"></div>`
                 
                     // Ctrl + Space Toggle Shortcut, Escape to Exit Source Code Mode
                     if(Config.shortcut){
@@ -268,6 +275,7 @@
                     setMainView(codeView.querySelector('.supercode-body '), editorWidth);
                 }
 
+                // Logic to run every time view opened => update editor content
                 let content = getSourceCode(editor.getContent());
                 if(!session){
                     session = ace.createEditSession(content, `ace/mode/${Config.language}`);
@@ -287,8 +295,13 @@
 
         const startPlugin = function() {
             const container = editor.getContainer();
-            isScreenSizeChanged = editorWidth != container.clientWidth;
+
+            if(editorWidth){
+                isScreenSizeChanged = editorWidth != container.clientWidth;
+            }
+
             editorWidth = container.clientWidth;
+
             if(isScreenSizeChanged || !originalHeader){
                 originalHeader = container.querySelector('.tox-editor-header');
             }
@@ -311,8 +324,8 @@
         return {
             getMetadata: function () {
                 return {
-                    name: "Source Code Editor",
-                    url: ""
+                    name: "Supercode",
+                    url: "https://github.com/prathamVaidya/supercode-tinymce-plugin"
                 };
             }
         }
