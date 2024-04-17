@@ -52,6 +52,13 @@ export default function TinymceEditor({ skin = 'oxide', value}) {
               'alignright alignjustify | bullist numlist outdent indent | ' +
               'supercode',
               highlight_on_focus: false,
+              // Config For Dark Mode to match any theme
+              // supercode: {
+              //     modalPrimaryColor: '#222f3e',
+              //     modalSecondaryColor: '#ededed',
+              //     theme: 'dracula',
+              //     dark: true
+              // }
             }}
         />
       </div>
