@@ -19,10 +19,24 @@
             </button>
         </div>
         <div id="supercode-editor"></div>
+        <div id="supercode-footer">
+            <button id="supercode-cancel-btn">
+                Cancel
+            </button>
+            <button id="supercode-save-btn">
+                Save
+            </button>
+        </div>
     </div>
 `
 
     const MODAL_CSS = `
+
+    :root{
+        --supercode-modal-primary: #ffffff;
+        --supercode-modal-secondary: #222f3e;
+        --supercode-modal-border: rgba(0, 0, 0, 0.1);
+    }
 
     /* Media query for mobile devices */
     @media only screen and (max-width: 767px) {
@@ -68,30 +82,60 @@
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+        background: var(--supercode-modal-primary);
     }
     #supercode-header {
         display: flex;
         padding: 0.5rem 1rem;
-        border-bottom: 1px solid #ebebeb;
+        border-bottom: 1px solid var(--supercode-modal-border);
+        color: var(--supercode-modal-secondary);
     }
     #supercode-modal h1 {
         flex-grow: 1;
         margin: auto;
         font-size: 14px;
     }
-    #supercode-modal button {
+    #supercode-close-btn {
         background: none;
         border: none;
         padding: 0;
         height: 100%;
-        cursor:pointer;
+        cursor: pointer;
+        fill: var(--supercode-modal-secondary);
     }
     #supercode-editor {
         width: 100%;
         height: 100%;
         position: relative;
     }
-`
+    #supercode-footer {
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: end;
+        gap: 1rem;
+        border-top: 1px solid var(--supercode-modal-border);
+    }
+    #supercode-footer button {
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        min-width: 5rem;
+        transition: opacity 0.1s linear;
+    }
+    #supercode-footer button:hover {
+        opacity: 0.8;
+    }
+    #supercode-cancel-btn {
+        background: transparent;
+        color: var(--supercode-modal-secondary);
+    }
+    #supercode-save-btn {
+        background: var(--supercode-modal-secondary);
+        color: var(--supercode-modal-primary);
+    }
+    `
 
     let modal = null;
 
@@ -152,7 +196,8 @@
             fontFamily: null,
             fallbackModal: false, // enabled in cases like inline, or versions where `CustomView` is not supported.
             modalPrimaryColor: '#ffffff',
-            modalSecondaryColor: '#222f3e'
+            modalSecondaryColor: '#222f3e',
+            dark: false
         }
 
         // Get Configurations
@@ -185,6 +230,7 @@
                             case 'autocomplete':
                             case 'shortcut':
                             case 'fallbackModal':
+                            case 'dark':
                                 if (typeof value === "boolean") {
                                     Config[key] = value;
                                 }
@@ -208,7 +254,6 @@
             if (!Config.icon) {
                 throw new Error("Supercode Icon name is invalid");
             }
-
             
             // Detect and set fallback model if its required
             if(!Config.fallbackModal){
@@ -217,7 +262,6 @@
                     Config.fallbackModal = true
                 }
             }
-
         }
         
         const setAceOptions = () => {
@@ -259,7 +303,7 @@
             setAceOptions();
         }
 
-        const setHeader = (view, originalHeader, onSave) => {
+        const setHeader = (view, originalHeader) => {
             // add a copy of original header to give original header look
             const newHeader = originalHeader.cloneNode(true);
             newHeader.style.position = 'relative';
@@ -287,7 +331,7 @@
                     isOverflow = false;
                     btn.setAttribute('data-mce-name', 'supercode-toggle')
                     btn.classList.add('tox-tbtn--enabled');
-                    btn.onclick = onSave;
+                    btn.onclick = onSaveHandler;
                 }
             });
 
@@ -301,7 +345,7 @@
                 const button = document.createElement('button');
                 button.classList = 'tox-tbtn tox-tbtn--enabled';
                 button.innerHTML = `<span class="tox-icon tox-tbtn__icon-wrap">${Config.icon}</span>`;
-                button.onclick = onSave;
+                button.onclick = onSaveHandler;
                 div.append(button);
                 newHeader.append(div);
             }
@@ -322,12 +366,11 @@
         setConfig(editor);
         initDependencies(Config);
 
-        // todo: fix event listener issue
-        // const modalKeydownListener = (e) => {
-        //     if((e.key === ' ' && e.ctrlKey) || e.key === 'Escape') {
-        //         hideModal();
-        //     }
-        // };
+        const modalKeydownListener = (e) => {
+            if(e.key === 'Escape') {
+                hideModal();
+            }
+        };
 
         const showModal = () => {
             if(!modal){
@@ -351,15 +394,24 @@
 
             /* Update Event Listeners */
             modal.element.querySelector('#supercode-backdrop').onclick = hideModal;
-            modal.element.querySelector('button').onclick = hideModal;
-            // modal.element.querySelector('#supercode-editor').addEventListener('keydown', modalKeydownListener);
+            modal.element.querySelector('#supercode-close-btn').onclick = hideModal;
+            modal.element.querySelector('#supercode-cancel-btn').onclick = hideModal;
+            modal.element.querySelector('#supercode-save-btn').onclick = () => {
+                onSaveHandler();
+                hideModal();
+            };
+            modal.element.querySelector('#supercode-editor').addEventListener('keydown', modalKeydownListener);
 
             /* Update Modal based on editor's theme */
             document.querySelector('body').classList.add('disable-scroll');
-            document.querySelector('#supercode-modal').style.background = Config.modalPrimaryColor
-            document.querySelector('#supercode-header').style.color = Config.modalSecondaryColor
+
+            document.body.style.setProperty('--supercode-modal-primary', Config.modalPrimaryColor);
+            document.body.style.setProperty('--supercode-modal-secondary', Config.modalSecondaryColor);
+            if(Config.dark){
+                document.body.style.setProperty('--supercode-modal-border', 'rgba(255, 255, 255, 0.1)');
+            }
             document.querySelector('#supercode-close-btn').innerHTML = editor.ui.registry.getAll().icons['close']
-            document.querySelector('#supercode-close-btn').style.fill = Config.modalSecondaryColor
+            
             modal.element.style.display = 'flex';
             setTimeout(() => {
                 modal.element.style.opacity = 1;
@@ -370,10 +422,10 @@
         }
 
         const hideModal = () => {
-            // removeEventListener('keydown', modalKeydownListener);
-            onSaveHandler();
+            removeEventListener('keydown', modalKeydownListener);
             document.querySelector('body').classList.remove('disable-scroll');
             modal.element.style.opacity = 0;
+            editor.focus();
             setTimeout(() => {
                 modal.element.style.display = 'none';
             }, 10)
@@ -446,7 +498,7 @@
                   
                   // On tinymce size change => resize code view
                   if(isScreenSizeChanged){
-                      setHeader(codeView.querySelector('.supercode-header'), originalHeader, onSaveHandler);
+                      setHeader(codeView.querySelector('.supercode-header'), originalHeader);
                       codeView.querySelector('.supercode-body ').style.width = editorWidth+'px';
                   }
   
@@ -462,7 +514,7 @@
                           codeView.addEventListener('keydown', onKeyDownHandler)
                       }
                       // configure header
-                      setHeader(codeView.querySelector('.supercode-header'), originalHeader, onSaveHandler);
+                      setHeader(codeView.querySelector('.supercode-header'), originalHeader);
                       // configure main code view to look same
                       setMainView(codeView.querySelector('.supercode-body '), editorWidth);
                   }
