@@ -135,7 +135,10 @@
         background: var(--supercode-modal-secondary);
         color: var(--supercode-modal-primary);
     }
-    `
+    `;
+
+    const CLOSE_ICON_FALLBACK = `<svg width="24" height="24"><path d="M17.3 8.2 13.4 12l3.9 3.8a1 1 0 0 1-1.5 1.5L12 13.4l-3.8 3.9a1 1 0 0 1-1.5-1.5l3.9-3.8-3.9-3.8a1 1 0 0 1 1.5-1.5l3.8 3.9 3.8-3.9a1 1 0 0 1 1.5 1.5Z" fill-rule="evenodd"></path></svg>`
+    const CODE_ICON_FALLBACK = `<svg width="24" height="24" focusable="false"><g fill-rule="nonzero"><path d="M9.8 15.7c.3.3.3.8 0 1-.3.4-.9.4-1.2 0l-4.4-4.1a.8.8 0 0 1 0-1.2l4.4-4.2c.3-.3.9-.3 1.2 0 .3.3.3.8 0 1.1L6 12l3.8 3.7ZM14.2 15.7c-.3.3-.3.8 0 1 .4.4.9.4 1.2 0l4.4-4.1c.3-.3.3-.9 0-1.2l-4.4-4.2a.8.8 0 0 0-1.2 0c-.3.3-.3.8 0 1.1L18 12l-3.8 3.7Z"></path></g></svg>`
 
     let modal = null;
 
@@ -197,7 +200,14 @@
             fallbackModal: false, // enabled in cases like inline, or versions where `CustomView` is not supported.
             modalPrimaryColor: '#ffffff',
             modalSecondaryColor: '#222f3e',
-            dark: false
+            dark: false,
+            debug: true
+        }
+
+        const debug = (msg) => {
+            if(Config.debug){
+                console.warn(`${msg} \n\nUse debug:false option to disable this warning`);
+            }
         }
 
         // Get Configurations
@@ -231,6 +241,7 @@
                             case 'shortcut':
                             case 'fallbackModal':
                             case 'dark':
+                            case 'debug':
                                 if (typeof value === "boolean") {
                                     Config[key] = value;
                                 }
@@ -250,9 +261,10 @@
             }
             
             // Set plugin icon
-            Config.icon = editor.ui.registry.getAll().icons[Config.iconName];
+            Config.icon = editor.ui.registry.getAll?.().icons?.[Config.iconName];
             if (!Config.icon) {
-                throw new Error("Supercode Icon name is invalid");
+                Config.icon = CODE_ICON_FALLBACK;
+                debug("Supercode Icon name is invalid or you are using older versions of tinyMCE. The icon is set to default fallback code icon.");
             }
             
             // Detect and set fallback model if its required
@@ -310,44 +322,34 @@
             // If menu-bar exists utilize the space to show Title "Source Code Editor"
             const menubar = newHeader.querySelector('.tox-menubar');
             if(menubar){
-                menubar.innerHTML = `<b style='font-size: 14px; font-weight: bold; padding: 9px;'>Source Code Editor</b>`
+                menubar.innerHTML = `<b style='font-size: 14px; font-weight: bold; padding: 11px 9px;'>Source Code Editor</b>`
             }
 
-            // hide all the buttons except supercode button, attach event listener
-            let isOverflow = true;
+            // disable all the buttons except supercode button, attach event listener
+            let overflowButton = null, isPluginButton = false;
             newHeader.querySelectorAll('.tox-tbtn, .tox-split-button').forEach((btn) => {
                 if(btn.getAttribute('data-mce-name') != 'supercode'){
                     // remove overflow button to make space for code button
                     if(btn.getAttribute('data-mce-name') === 'overflow-button'){
-                        btn.style.display = 'none';
-                        btn.removeAttribute('data-mce-name')
-                        return;
-                }
+                        overflowButton = btn;
+                    }
                     btn.classList.remove('tox-tbtn--enabled');
                     btn.classList.add('tox-tbtn--disabled');
                     btn.removeAttribute('data-mce-name');
                 }
                 else{
-                    isOverflow = false;
+                    isPluginButton = true;
                     btn.setAttribute('data-mce-name', 'supercode-toggle')
                     btn.classList.add('tox-tbtn--enabled');
                     btn.onclick = onSaveHandler;
                 }
             });
 
-            // in case of overflow, button is inside a floating toolbar
-            if(isOverflow){
-                const div = document.createElement('div')
-                div.classList = 'tox-toolbar__group';
-                div.style.position = 'absolute';
-                div.style.right = 0;
-                div.style.height = '100%';
-                const button = document.createElement('button');
-                button.classList = 'tox-tbtn tox-tbtn--enabled';
-                button.innerHTML = `<span class="tox-icon tox-tbtn__icon-wrap">${Config.icon}</span>`;
-                button.onclick = onSaveHandler;
-                div.append(button);
-                newHeader.append(div);
+            // in case of overflow, replace the overflow button with code button
+            if(!isPluginButton && overflowButton){
+                overflowButton.classList = 'tox-tbtn tox-tbtn--enabled';
+                overflowButton.innerHTML = `<span class="tox-icon tox-tbtn__icon-wrap">${Config.icon}</span>`;
+                overflowButton.onclick = onSaveHandler;
             }
             view.innerHTML = ''; // delete any existing header
             view.append(newHeader);
@@ -410,7 +412,8 @@
             if(Config.dark){
                 document.body.style.setProperty('--supercode-modal-border', 'rgba(255, 255, 255, 0.1)');
             }
-            document.querySelector('#supercode-close-btn').innerHTML = editor.ui.registry.getAll().icons['close']
+            
+            modal.element.querySelector('#supercode-close-btn').innerHTML = editor.ui.registry.getAll?.().icons?.['close'] ?? CLOSE_ICON_FALLBACK;
             
             modal.element.style.display = 'flex';
             setTimeout(() => {
@@ -429,7 +432,7 @@
             setTimeout(() => {
                 modal.element.style.display = 'none';
             }, 10)
-        }
+        };
     
         const onSaveHandler = () => {
             editor.focus();
@@ -500,6 +503,7 @@
                   if(isScreenSizeChanged){
                       setHeader(codeView.querySelector('.supercode-header'), originalHeader);
                       codeView.querySelector('.supercode-body ').style.width = editorWidth+'px';
+                      aceEditor.resize();
                   }
   
                   // Only on First time plugin opened => mount view
