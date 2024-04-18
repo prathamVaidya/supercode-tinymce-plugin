@@ -540,6 +540,18 @@
             onAction: startPlugin
         });
 
+        editor.ui.registry.addMenuItem('supercode', {
+            icon: Config.iconName,
+            text: 'Source Code',
+            onAction: startPlugin
+        });
+
+        editor.ui.registry.addContextMenu('supercode', {
+            update: element => {
+                return 'supercode';
+            }
+        });
+
         // Ctrl + Space Toggle Shortcut
         if(Config.shortcut){
             editor.shortcuts.add('ctrl+32', 'Toggles Source Code Editing Mode', startPlugin);
