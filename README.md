@@ -38,6 +38,11 @@ To use the Supercode plugin in TinyMCE, simply:
 3. Make changes to your code as needed, utilizing the features provided by Supercode.
 4. Click again on the Supercode Toggle button or press escape or use Ctrl+Space shortcut to switch back to visual editing.
 
+## Using Modal Dialog box
+
+Supercode uses [Custom View](https://www.tiny.cloud/docs/tinymce/latest/custom-view/) to view source code in tinymce editor itself. This Custom View is not supported on older version `<=v5` and in `inline` mode. A modal dialog is used as a fallback in case `Custom Views` is not available or `fallbackModal` is set to `true`.
+
+This modal can be customized using following modal related options like `fallbackModal`, `modalPrimaryColor`, `modalSecondaryColor`, `dark`.
 
 ## Using as a Markdown Editor
 
@@ -109,6 +114,11 @@ Here are all the configurations
 | `shortcut`        | Specifies whether (Ctrl+Space) keyboard shortcuts are enabled.                                 | Boolean          |
 | `aceCss`          | The custom CSS or CSS fonts to customize the appearance of the code editor.            | String           |
 | `fontFamily`      | The font family applied to the code editor.                                       | String           |
+| `fallbackModal`      | Set it to true to explicitly use code editor in modal dialog. Defaults to automatic detection.                                       | String           |
+| `modalPrimaryColor`      | Modal Primary color if using custom tinymce skin editor.                                       | String           |
+| `modalSecondaryColor`      | Modal Secondary color if using custom tinymce skin editor.                                       | String           |
+| `dark`      | Set `true` if your modal primary color is dark to add matching border editor.                                       | String           |
+| `debug`      | Set `false` to disable debug warnings. Default `false` editor.                                       | String           |
 
 # Editor Themes
 
