@@ -1,7 +1,7 @@
 {
   "name": "supercode-tinymce-plugin",
-  "version": "1.0.2",
-  "description": "Opensource and Powerful Source Code editor for TinyMCE. Also enables more than just HTML editing enabling Markdown Editing or any source code editing.",
+  "version": "1.2.0",
+  "description": "An Enhanced and open source Code editor for TinyMCE with improved integration with TinyMCE view",
   "main": "index.js",
   "scripts": {
     "build": "cp src/* supercode/ -r && vite build",
@@ -27,7 +27,7 @@
     "vite": "^5.2.7"
   },
   "dependencies": {
-    "@tinymce/tinymce-react": "^5.0.0",
+    "@tinymce/tinymce-react": "^5.0.1",
     "markdown-it": "^14.1.0",
     "tinymce": "^7.0.0",
     "turndown": "^7.1.3"
