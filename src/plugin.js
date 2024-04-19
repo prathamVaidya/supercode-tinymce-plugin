@@ -32,7 +32,7 @@
         </div>
         <div id="supercode-editor"></div>
         <div id="supercode-footer">
-            <div class="supercode-theme-container">
+            <div id="supercode-theme-container">
                 <label for="supercode-theme-dropdown">Select Theme:</label>
                 <select id="supercode-theme-dropdown">
                     <optgroup label="LIGHT">
@@ -78,7 +78,7 @@
                     </optgroup>
                 </select>
             </div>
-            <div class="supercode-button-container">
+            <div id="supercode-button-container">
                 <button id="supercode-cancel-btn">Cancel</button>
                 <button id="supercode-save-btn">Save</button>
             </div>
@@ -173,26 +173,26 @@
         gap: 1rem;
         border-top: 1px solid var(--supercode-modal-border);
     }
-    .supercode-theme-container {
+    #supercode-theme-container {
         display: flex;
         align-items: center;
     }
-    .supercode-theme-container label {
+    #supercode-theme-container label {
         margin-right: 1.0rem; /* Adjust as needed */
         color: var(--supercode-modal-secondary);
         padding:5px 0px 0px 0px;
     }
-    .supercode-theme-container select {
+    #supercode-theme-container select {
         /* Add styles for select dropdown */
         padding:6px 3px;
         min-width:200px !important;
         border-radius: 4px;
     }
-    .supercode-button-container {
+    #supercode-button-container {
         display: flex;
         gap: 1rem;
     }
-    #supercode-footer .supercode-button-container button {
+    #supercode-footer #supercode-button-container button {
         padding: 0.5rem 1rem;
         border-radius: 5px;
         font-weight: bold;
@@ -201,7 +201,7 @@
         min-width: 5rem;
         transition: opacity 0.1s linear;
     }
-    #supercode-footer .supercode-button-container button:hover {
+    #supercode-footer #supercode-button-container button:hover {
         opacity: 0.8;
     }
     #supercode-cancel-btn {
@@ -218,11 +218,11 @@
             flex-direction: row; /* Switch to horizontal layout */
             align-items: center;
         }
-        .supercode-theme-container {
+        #supercode-theme-container {
             width: auto; /* Allow select container to adjust width */
             margin-bottom: 0; /* Remove margin for desktop view */
         }
-        .supercode-button-container {
+        #supercode-button-container {
             display: flex; /* Show button container */
             gap: 1rem; /* Add spacing between buttons */
         }
