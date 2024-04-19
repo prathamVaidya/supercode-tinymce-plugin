@@ -1,6 +1,6 @@
 # Supercode TinyMCE Plugin
 
-**Supercode** is an enhanced source code editor plugin for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. (No ugly popup modal)
+**Supercode** is an enhanced source code editor plugin for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment. Supported on tinyMCE versions `v5`, `v6` and `v7`.
 
 ![chrome-capture-2024-4-7 (1)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/eb519154-ac86-423a-8d63-450f174c7e4b)
 
@@ -43,6 +43,8 @@ To use the Supercode plugin in TinyMCE, simply:
 Supercode uses [Custom View](https://www.tiny.cloud/docs/tinymce/latest/custom-view/) to view source code in tinymce editor itself. This Custom View is not supported on older version `<=v5` and in `inline` mode. A modal dialog is used as a fallback in case `Custom Views` is not available or `fallbackModal` is set to `true`.
 
 This modal can be customized using following modal related options like `fallbackModal`, `modalPrimaryColor`, `modalSecondaryColor`, `dark`.
+
+![chrome-capture-2024-4-19 (1)](https://github.com/prathamVaidya/supercode-tinymce-plugin/assets/61202986/3f8cc702-442a-4eb9-8a91-e3db5c640229)
 
 ## Using as a Markdown Editor
 
@@ -173,7 +175,7 @@ All the ace themes are supported. You can try out the themes [here](https://ace.
 
 ## Compatibility
 
-Supercode is compatible with the latest versions of TinyMCE and supports all the themes. I have only tested it on v7 till now. Create an issue if it has or has not worked for your tinymce version. As per my knowledge it should work with all the tinyMCE versions after v5.
+Supercode is compatible with the latest versions of TinyMCE and supports all the themes. It has been tested on `v5`, `v6` and `v7` of tinyMCE. In `v5` the in-editor integration is not supported so a fallback modal is always used. It is not tested on older versions that are less than `v5`. If you have tested on any older versions then please create an issue and let us know.
 
 ## Todos
 
