@@ -23,7 +23,7 @@
     
     const MODAL_HTML = `
     <div id="supercode-backdrop"></div>
-    <div id="supercode-modal" class="shadow shadow-lg">
+    <div id="supercode-modal">
         <div id="supercode-header">
             <h1>Source Code Editor</h1>
             <button id="supercode-close-btn">
