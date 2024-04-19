@@ -68,7 +68,7 @@
         top: 0;
         left: 0;
         background: black;
-        opacity: 0.8;
+        opacity: 0.7;
         width: 100%;
         height: 100%;
         z-index: 1;
@@ -270,7 +270,7 @@
             // Detect and set fallback model if its required
             if(!Config.fallbackModal){
                 // case: inline mode, < v5
-                if(editor.getParam('inline') === true || tinymce.majorVersion < 5){
+                if(editor.getParam('inline') === true || tinymce.majorVersion <= 5){
                     Config.fallbackModal = true
                 }
             }
@@ -402,7 +402,10 @@
                 onSaveHandler();
                 hideModal();
             };
-            modal.element.querySelector('#supercode-editor').addEventListener('keydown', modalKeydownListener);
+
+            if(Config.shortcut){
+                modal.element.querySelector('#supercode-editor').addEventListener('keydown', modalKeydownListener);
+            }
 
             /* Update Modal based on editor's theme */
             document.querySelector('body').classList.add('disable-scroll');
@@ -425,7 +428,9 @@
         }
 
         const hideModal = () => {
-            removeEventListener('keydown', modalKeydownListener);
+            if(Config.shortcut){
+                removeEventListener('keydown', modalKeydownListener);
+            }
             document.querySelector('body').classList.remove('disable-scroll');
             modal.element.style.opacity = 0;
             editor.focus();
@@ -531,6 +536,7 @@
                   }
                 }
           };
+          
             editor.ui.registry.addView('supercode', CodeView);
         }
 
