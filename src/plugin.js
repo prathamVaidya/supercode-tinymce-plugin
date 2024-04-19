@@ -23,7 +23,7 @@
     
     const MODAL_HTML = `
     <div id="supercode-backdrop"></div>
-    <div id="supercode-modal">
+    <div id="supercode-modal" class="shadow shadow-lg">
         <div id="supercode-header">
             <h1>Source Code Editor</h1>
             <button id="supercode-close-btn">
@@ -32,12 +32,56 @@
         </div>
         <div id="supercode-editor"></div>
         <div id="supercode-footer">
-            <button id="supercode-cancel-btn">
-                Cancel
-            </button>
-            <button id="supercode-save-btn">
-                Save
-            </button>
+            <div class="supercode-theme-container">
+                <label for="supercode-theme-dropdown">Select Theme:</label>
+                <select id="supercode-theme-dropdown">
+                    <optgroup label="LIGHT">
+                        <option value="chrome">Chrome</option>
+                        <option value="clouds">Clouds</option>
+                        <option value="crimson_editor">Crimson Editor</option>
+                        <option value="dawn">Dawn</option>
+                        <option value="dreamweaver">Dreamweaver</option>
+                        <option value="eclipse">Eclipse</option>
+                        <option value="github">GitHub</option>
+                        <option value="iplastic">IPlastic</option>
+                        <option value="katzenmilch">KatzenMilch</option>
+                        <option value="kuroir">Kuroir</option>
+                        <option value="solarized_light">Solarized Light</option>
+                        <option value="sqlserver">SQL Server</option>
+                        <option value="textmate">TextMate</option>
+                        <option value="tomorrow">Tomorrow</option>
+                        <option value="xcode">XCode</option>
+                    </optgroup>
+                    <optgroup label="DARK">
+                        <option value="ambiance">Ambiance</option>
+                        <option value="chaos">Chaos</option>
+                        <option value="clouds_midnight">Clouds Midnight</option>
+                        <option value="cobalt">Cobalt</option>
+                        <option value="dracula">Dracula</option>
+                        <option value="gob">Green on Black</option>
+                        <option value="gruvbox">Gruvbox</option>
+                        <option value="idle_fingers">idle Fingers</option>
+                        <option value="kr_theme">krTheme</option>
+                        <option value="merbivore">Merbivore</option>
+                        <option value="merbivore_soft">Merbivore Soft</option>
+                        <option value="mono_industrial">Mono Industrial</option>
+                        <option value="monokai">Monokai</option>
+                        <option value="pastel_on_dark">Pastel on Dark</option>
+                        <option value="solarized_dark">Solarized Dark</option>
+                        <option value="terminal">Terminal</option>
+                        <option value="tomorrow_night">Tomorrow Night</option>
+                        <option value="tomorrow_night_blue">Tomorrow Night Blue</option>
+                        <option value="tomorrow_night_bright">Tomorrow Night Bright</option>
+                        <option value="tomorrow_night_eighties">Tomorrow Night 80s</option>
+                        <option value="twilight">Twilight</option>
+                        <option value="vibrant_ink">Vibrant Ink</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="supercode-button-container">
+                <button id="supercode-cancel-btn">Cancel</button>
+                <button id="supercode-save-btn">Save</button>
+            </div>
         </div>
     </div>
 `
@@ -123,11 +167,32 @@
     #supercode-footer {
         padding: 0.5rem 1rem;
         display: flex;
-        justify-content: end;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
         gap: 1rem;
         border-top: 1px solid var(--supercode-modal-border);
     }
-    #supercode-footer button {
+    .supercode-theme-container {
+        display: flex;
+        align-items: center;
+    }
+    .supercode-theme-container label {
+        margin-right: 1.0rem; /* Adjust as needed */
+        color: var(--supercode-modal-secondary);
+        padding:5px 0px 0px 0px;
+    }
+    .supercode-theme-container select {
+        /* Add styles for select dropdown */
+        padding:6px 3px;
+        min-width:200px !important;
+        border-radius: 4px;
+    }
+    .supercode-button-container {
+        display: flex;
+        gap: 1rem;
+    }
+    #supercode-footer .supercode-button-container button {
         padding: 0.5rem 1rem;
         border-radius: 5px;
         font-weight: bold;
@@ -136,7 +201,7 @@
         min-width: 5rem;
         transition: opacity 0.1s linear;
     }
-    #supercode-footer button:hover {
+    #supercode-footer .supercode-button-container button:hover {
         opacity: 0.8;
     }
     #supercode-cancel-btn {
@@ -146,6 +211,21 @@
     #supercode-save-btn {
         background: var(--supercode-modal-secondary);
         color: var(--supercode-modal-primary);
+    }
+    /* Media query for responsiveness */
+    @media (min-width: 768px) {
+        #supercode-footer {
+            flex-direction: row; /* Switch to horizontal layout */
+            align-items: center;
+        }
+        .supercode-theme-container {
+            width: auto; /* Allow select container to adjust width */
+            margin-bottom: 0; /* Remove margin for desktop view */
+        }
+        .supercode-button-container {
+            display: flex; /* Show button container */
+            gap: 1rem; /* Add spacing between buttons */
+        }
     }
     `;
 
@@ -300,7 +380,30 @@
             }
 
             aceEditor.setOptions(options);
-            aceEditor.setTheme(`ace/theme/${Config.theme}`);
+            
+            // Check if the theme cookie exists
+            const themeCookieExists = document.cookie.split(';').some((item) => item.trim().startsWith('supercodeTheme='));
+            
+            let selectedTheme = `${Config.theme}`;
+            
+            // If the cookie exists, load the theme from the cookie
+            if (themeCookieExists) {
+                selectedTheme = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('supercodeTheme='))
+                    .split('=')[1];
+                aceEditor.setTheme(`ace/theme/${selectedTheme}`);
+            } else {
+                aceEditor.setTheme(`ace/theme/${Config.theme}`);
+            }
+            
+            const themeSelect = document.getElementById("supercode-theme-dropdown");
+            Array.from(themeSelect.options).forEach(option => {
+                if (option.value === selectedTheme) {
+                    option.selected = true;
+                }
+            });
+            
             aceEditor.setFontSize(Config.fontSize);
             aceEditor.setShowPrintMargin(false);
         }
@@ -419,6 +522,8 @@
                 modal.element.querySelector('#supercode-editor').addEventListener('keydown', modalKeydownListener);
             }
 
+            modal.element.querySelector('#supercode-theme-dropdown').addEventListener('change', onThemeHandler);
+
             /* Update Modal based on editor's theme */
             document.querySelector('body').classList.add('disable-scroll');
 
@@ -469,6 +574,12 @@
             if((e.key === ' ' && e.ctrlKey) || e.key === 'Escape'){
                 onSaveHandler();
             }
+        };
+
+        const onThemeHandler = (e) => {
+            const selectedTheme = e.target.value;
+            aceEditor.setTheme(`ace/theme/${selectedTheme}`);
+            document.cookie = `supercodeTheme=${selectedTheme}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
         };
 
         const getSourceCode = (value) => {
