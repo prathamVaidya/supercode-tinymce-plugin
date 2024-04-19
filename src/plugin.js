@@ -1,3 +1,15 @@
+/*
+ * Supercode TinyMCE Plugin
+ * Supercode is an enhanced source code editor plugin for TinyMCE, the popular web-based WYSIWYG editor. This plugin provides users with a seamless experience for editing and displaying source code within the TinyMCE editor environment.
+ * 
+ * Repository: https://github.com/prathamVaidya/supercode-tinymce-plugin
+ * Author: Pratham Vaidya
+ * License: GPL-3.0
+ * Version: 1.2.0
+ * 
+ * Released under the GPL-3.0 License.
+ */
+
 ! function() {
     "use strict";
 
