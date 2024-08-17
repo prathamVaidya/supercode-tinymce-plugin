@@ -468,7 +468,7 @@
                 }
                 editor.setContent(value);
             });
-            editor.nodeChanged();
+            editor.nodeChanged(); 
         };
     
         const onSaveHandler = () => {
