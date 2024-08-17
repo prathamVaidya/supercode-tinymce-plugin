@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "cp src/* supercode/ -r && vite build",
-    "start": "rm -rf public/tinymce && cp node_modules/tinymce public -r && storybook dev -p 6006",
-    "build-storybook": "cp node_modules/tinymce public -r && storybook build",
+    "start": "rm -rf public/tinymce && cp -r node_modules/tinymce public && storybook dev -p 6006",
+    "build-storybook": "cp -r node_modules/tinymce public && storybook build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Pratham Vaidya",
