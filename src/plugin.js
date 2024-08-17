@@ -192,6 +192,14 @@
         document.head.append(style);
     }
 
+    const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(null, args), delay);
+        };
+    };
+
     // on plugin load
     const mainPlugin = function(editor) {
 
@@ -450,20 +458,34 @@
                 modal.element.style.display = 'none';
             }, 10)
         };
+
+        // Save editor content to tinymce editor on ace editor change
+        const liveSave = () => {
+            editor.undoManager.transact(function() {
+                let value = aceEditor.getValue();
+                if(Config.renderer){
+                    value = Config.renderer(value);
+                }
+                editor.setContent(value);
+            });
+            editor.nodeChanged();
+        };
     
         const onSaveHandler = () => {
             editor.focus();
-            editor.undoManager.transact(function() {
-            let value = aceEditor.getValue();
-            if(Config.renderer){
-                value = Config.renderer(value);
+            if (Config.fallbackModal) {
+                editor.undoManager.transact(function() {
+                let value = aceEditor.getValue();
+                if(Config.renderer){
+                    value = Config.renderer(value);
+                }
+                editor.setContent(value);
+                });
+                editor.selection.setCursorLocation();
+                editor.nodeChanged();
             }
-            editor.setContent(value);
-            });
-            editor.selection.setCursorLocation();
-            editor.nodeChanged();
             editor.execCommand('ToggleView', false, 'supercode');
-        }
+        };
 
         const onKeyDownHandler = (e) => {
             if((e.key === ' ' && e.ctrlKey) || e.key === 'Escape'){
@@ -484,6 +506,11 @@
             if(!session){
                 session = ace.createEditSession(content, `ace/mode/${Config.language}`);
                 session.setUseWrapMode(Config.wrap);
+                // Attach live save to ace editor for in-editor source view
+                if (!Config.fallbackModal) {
+                    const debouncedSave = debounce(liveSave, 300);
+                    session.on('change', debouncedSave);
+                }
             }
             aceEditor.setSession(session);
             session.setValue(content);
