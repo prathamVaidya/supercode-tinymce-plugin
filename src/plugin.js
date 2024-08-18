@@ -5,7 +5,7 @@
  * Repository: https://github.com/prathamVaidya/supercode-tinymce-plugin
  * Author: Pratham Vaidya
  * License: GPL-3.0
- * Version: 1.2.0
+ * Version: 1.2.1
  * 
  * Released under the GPL-3.0 License.
  */
