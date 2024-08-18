@@ -1,10 +1,10 @@
 {
   "name": "supercode-tinymce-plugin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An Enhanced and open source Code editor for TinyMCE with improved integration with TinyMCE view",
   "main": "index.js",
   "scripts": {
-    "build": "cp src/* supercode/ -r && vite build",
+    "build": "cp -r src/* supercode/ && vite build",
     "start": "rm -rf public/tinymce && cp -r node_modules/tinymce public && storybook dev -p 6006",
     "build-storybook": "cp -r node_modules/tinymce public && storybook build",
     "test": "echo \"Error: no test specified\" && exit 1"
