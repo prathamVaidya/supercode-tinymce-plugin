@@ -186,6 +186,9 @@ Supercode is compatible with the latest versions of TinyMCE and supports all the
 - [ ] Resize support for Supercode editor. (Current behavior: supercode will not resize until user goes back to TinyMCE visual mode)
 - [ ] Optimizations for Markdown editor
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=prathamVaidya/supercode-tinymce-plugin&type=Date)](https://star-history.com/#prathamVaidya/supercode-tinymce-plugin&Date)
 
 ## Contributing
 
